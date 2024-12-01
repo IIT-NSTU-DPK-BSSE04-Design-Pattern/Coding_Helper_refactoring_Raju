@@ -34,3 +34,5 @@ public class getTfIdf {
         return 1 + Math.log(allFile.size() / count);
     }
 }
+identify code smell and refactor it and give me smell name, refactor: description of the refectoring
+and give me refactoring code 

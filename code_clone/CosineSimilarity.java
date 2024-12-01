@@ -3,68 +3,65 @@ package code_clone;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CosineSimilarity {
 
-    public static ArrayList<double[]> similarArray = new ArrayList<double[]>();
-   // public static ArrayList<Double> clone = new ArrayList<>();
+    public static List<double[]> similarArray = new ArrayList<>();
 
-    public void getCosinesimilarity() {
-        double similarity = 0;
-        for (int i = 0; i < CloneCheck.ProjectFileName1.size(); i++) {
-            System.out.println("");
-            double[] similar;
-            //int k = CloneCheck.ProjectFileName2.size();
-            similar = new double[CloneCheck.ProjectFileName2.size()];
-            int count = 0;
-            // similar = new double[TfIdfCalculate.tfidfvectorProject2.size() + 1];
-            for (int j = 0; j < CloneCheck.ProjectFileName2.size(); j++) {
-                similarity = cosineSimilarity(TfIdfCalculate.tfidfvectorProject1.get(i), TfIdfCalculate.tfidfvectorProject2.get(j));
-                BigDecimal bd = new BigDecimal(similarity).setScale(2, RoundingMode.HALF_UP);
-                double getSimilar = bd.doubleValue();
-                System.out.println(CloneCheck.ProjectFileName1.get(i) + " vs " + CloneCheck.ProjectFileName2.get(j) + " " + getSimilar + "%");
-                similar[count] = similarity;
-             //   clone.add(similarity);
-
-                count++;
-            }
-            similarArray.add(similar);
+    // Refactored method to get cosine similarities for all project files
+    public void calculateSimilarities(List<String> projectFileNames1, List<String> projectFileNames2, List<double[]> tfidfVectors1, List<double[]> tfidfVectors2) {
+        for (int i = 0; i < projectFileNames1.size(); i++) {
+            double[] similarities = calculateProjectSimilarities(i, projectFileNames1, projectFileNames2, tfidfVectors1, tfidfVectors2);
+            similarArray.add(similarities);  // Store results
         }
-
     }
 
-    public double cosineSimilarity(double[] project1, double[] project2) {
-        double dotproduct = 0;
-        double project1magnitude = 0;
-        double project2magnitude = 0;
-        double cosinesimilarity = 0;
-        for (int i = 0; i < project2.length; i++) {
-            dotproduct += project1[i] * project2[i];
-            project1magnitude += Math.pow(project1[i], 2);
-            project2magnitude += Math.pow(project2[i], 2);
+    // Method to calculate similarity between one project file and all others
+    private double[] calculateProjectSimilarities(int index, List<String> projectFileNames1, List<String> projectFileNames2, List<double[]> tfidfVectors1, List<double[]> tfidfVectors2) {
+        double[] similarities = new double[projectFileNames2.size()];
+        for (int j = 0; j < projectFileNames2.size(); j++) {
+            double similarity = cosineSimilarity(tfidfVectors1.get(index), tfidfVectors2.get(j));
+            similarities[j] = similarity;
 
+            // Print or log similarity
+            printSimilarity(projectFileNames1.get(index), projectFileNames2.get(j), similarity);
         }
-        project1magnitude = Math.sqrt(project1magnitude);
-        project2magnitude = Math.sqrt(project2magnitude);
-        //   if(project1magnitude!=0 && project2magnitude!=0){
-        cosinesimilarity = dotproduct / (project1magnitude * project2magnitude) * 100;
-        if (Double.isNaN(cosinesimilarity)) {
-            cosinesimilarity = 0.0;
-        }
-        return cosinesimilarity;
-
+        return similarities;
     }
 
-   /* public void getAverage() {
-        double sum = 0;
-        for (int i = 0; i < clone.size(); i++) {
-          //  System.out.println(clone.get(i));
-            sum += clone.get(i);
+    // Method to calculate cosine similarity between two vectors
+    public double cosineSimilarity(double[] vector1, double[] vector2) {
+        double dotProduct = 0;
+        double vector1Magnitude = 0;
+        double vector2Magnitude = 0;
+
+        for (int i = 0; i < vector2.length; i++) {
+            dotProduct += vector1[i] * vector2[i];
+            vector1Magnitude += Math.pow(vector1[i], 2);
+            vector2Magnitude += Math.pow(vector2[i], 2);
         }
-      
-        double average = sum /clone.size();
-     //   System.out.println(average);
 
-    }*/
+        vector1Magnitude = Math.sqrt(vector1Magnitude);
+        vector2Magnitude = Math.sqrt(vector2Magnitude);
 
+        // Calculate cosine similarity
+        double cosineSimilarity = dotProduct / (vector1Magnitude * vector2Magnitude) * 100;
+        return Double.isNaN(cosineSimilarity) ? 0.0 : cosineSimilarity;
+    }
+
+    // Method to print or log the similarity result
+    private void printSimilarity(String projectFile1, String projectFile2, double similarity) {
+        double roundedSimilarity = roundToTwoDecimalPlaces(similarity);
+        System.out.println(projectFile1 + " vs " + projectFile2 + " " + roundedSimilarity + "%");
+    }
+
+    // Method to round a value to two decimal places
+    private double roundToTwoDecimalPlaces(double value) {
+        BigDecimal bd = new BigDecimal(value).setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 }
+
+
+

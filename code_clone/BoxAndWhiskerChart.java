@@ -1,5 +1,4 @@
 package code_clone;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -23,16 +22,13 @@ public class BoxAndWhiskerChart {
 
     JScrollPane scrollPane;
 
-    private List<Double> getInputData(double l[]) {
+    private List<Double> getInputData(double[] data) {
         ArrayList<Double> list = new ArrayList<>();
-        for (int j = 0; j < l.length; j++) {
-            double d = l[j];
-            //    System.out.println("k=="+l[j]);
-            list.add(l[j]);
-
-        }//System.out.println("");
+        for (int j = 0; j < data.length; j++) {
+            list.add(data[j]);
+        }
         return list;
-    }
+    } 
 
     public void display() {
         JFrame f = new JFrame("Clone_Check");
