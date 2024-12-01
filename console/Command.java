@@ -54,87 +54,59 @@ public class Command {
 
             boolean wardval = m.find();
 
-            if (choice.equalsIgnoreCase("help")) {
-                System.out.println("\t1.clone");
-                System.out.println("\t2.File_Compress & File_Decompress");
-                System.out.println("\t3.Search");
-                System.out.println("\t4.Matrices\n\t\tFile Count-->fc\n\t\tMethod  Count-->mc\n\t\tLine of Code-->loc\n\t\tAverage line of Code-->a_loc");
-                System.out.println("\t5.exit");
-
-            } else if (choice.equalsIgnoreCase("clone") | choice.equalsIgnoreCase("1")) {
-
-                System.out.println("\tSelect two project:");
-                projectPath();
-
-            } else if (choice.equalsIgnoreCase("File_Compress & File_Decompress") | choice.equalsIgnoreCase("2")) {
-                System.out.println("\t\tFor Compress-->fcom");
-                System.out.println("\t\tFor Decompress-->dcom");
-            } else if (choice.equalsIgnoreCase("fcom")) {
-                new mainEncode().Compress(currentPath);
-
-            } else if (choice.equalsIgnoreCase("dcom")) {
-                new mainDecode().Decompress(currentPath);
-
-            } else if (choice.equalsIgnoreCase("search") | choice.equalsIgnoreCase("3")) {
-                System.out.print("\tWrite \"query\" and projectname:");
-                //   System.out.println("x=" + currentPath);
-                Search(currentPath);
-                //  projectPath();
-            } else if (choice.equalsIgnoreCase("4")| choice.equalsIgnoreCase("Metrics")) {
-                System.out.println("\t4.Metrics\n\t\tJava File Count-->fc\n\t\tMethod  Count-->mc\n\t\tLine of Code-->loc\n\t\tAverage LOC of a class");
-
-            } else if (choice.equalsIgnoreCase("mc") | choice.equalsIgnoreCase("method_count")) {
-                getMethod(currentPath);
-
-            } else if (choice.equalsIgnoreCase("Line_Of_Code") | choice.equalsIgnoreCase("LOC")) {
-                LineCode(currentPath);
-
-            } else if (choice.equalsIgnoreCase("a_loc")|choice.equalsIgnoreCase("average LOc of a Class")) {
-                average_Line_of_Project(currentPath);
-
-            } else if (choice.equalsIgnoreCase("fc")| choice.equalsIgnoreCase("File_Cunt")) {
-                getTotalClass(currentPath);
-
-            } else if (choice.equalsIgnoreCase("cd")) {
-                currentPath = getcurrentPath();
-
-            } else if (Pattern.matches("(?i)\\bcd\\b\\s*\\.\\.", choice)) {
-                String result;
-
-                String newPath = currentPath;
-                // System.out.println("newpath=" + newPath);
-                result = backDirectory(newPath);
-                //   }
-            } else if (Pattern.matches("(?i)\\bcd\\b\\s*\\\\", choice)) {
-                currentPath = currentPath.substring(0, 3);
-
-            } else if (Pattern.matches("((?i)\\bcdrive\\b\\s+(\\w+[:]))", choice)) {
-
-                Matcher drv = Pattern.compile("(?i)\\bcdrive\\b\\s*(\\w+[:])").matcher(choice);
-                if (drv.find()) {
-                    checkFileExist(drv.group(1).toUpperCase());
+            private void handleCommand(String choice) throws IOException {
+                switch (choice.toLowerCase()) {
+                    case "help":
+                        displayHelp();
+                        break;
+                    case "1":
+                    case "clone":
+                        handleClone();
+                        break;
+                    case "2":
+                    case "file_compress & file_decompress":
+                        handleFileCompressDecompress();
+                        break;
+                    case "fcom":
+                        new mainEncode().Compress(currentPath);
+                        break;
+                    case "dcom":
+                        new mainDecode().Decompress(currentPath);
+                        break;
+                    case "3":
+                    case "search":
+                        handleSearch();
+                        break;
+                    case "4":
+                    case "metrics":
+                        handleMetrics();
+                        break;
+                    case "mc":
+                    case "method_count":
+                        getMethodCount(currentPath);
+                        break;
+                    case "loc":
+                    case "line_of_code":
+                        getLineOfCode(currentPath);
+                        break;
+                    case "a_loc":
+                        getAverageLOC(currentPath);
+                        break;
+                    case "fc":
+                    case "file_count":
+                        getTotalClassCount(currentPath);
+                        break;
+                    case "exit":
+                    case "5":
+                        System.exit(0);
+                        break;
+                    default:
+                        handlePathNavigation(choice);
+                        break;
                 }
-            } else if (choice.equalsIgnoreCase("dir")) {
-                //  String path;             
-                String path;
-                if (currentPath == null) {
-                    path = FileSystems.getDefault().getPath("").toAbsolutePath().toString();
-                } else {
-
-                    path = currentPath;
-                    //    System.out.println(currentPath);
-                }
-                listDirectory(path + "\\");
-            } else if (specialvalue == false && wardval == true) {
-                forwardDirectory(m.group(2));
-
-            } else if (choice.equalsIgnoreCase("exit") | choice.equals("5")) {
-                System.exit(0);
-            } else {
-                System.out.println("'" + choice + "' is not recognized as a command");
-            }
-        }
+            }        
     }
+}
 
     public String getcurrentPath() {
         String path;
