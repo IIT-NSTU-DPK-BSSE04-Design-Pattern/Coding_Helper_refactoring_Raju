@@ -38,40 +38,8 @@ public class CloneCheck {
 
     }
 
-    /*   public void getFileList1(String project1) {
-
-        String currentpath = Command.currentPath;
-        String current = currentpath.replaceAll("\\\\", "-").replace(":", "");//location of current file
-        String Pathname1 = "H:\\coding_helper" + "\\ProcessFile$" + current + "-" + project1;
-        File folder = new File(Pathname1);
-        File[] listOfFiles = folder.listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].toString().endsWith(".txt")) {
-                //  String newFilename = listOfFiles[i].getName().replaceAll(".{3}$", "java");
-                ProjectFileName1.add(listOfFiles[i].getName().replaceAll(".{3}$", "java"));
-            }
-        }
-
-    }
-
-    public void getFileList2(String project2) {
-
-        String currentpath = Command.currentPath;
-        String current = currentpath.replaceAll("\\\\", "-").replace(":", "");//location of current file
-        String Pathname2 = "H:\\coding_helper" + "\\ProcessFile$" + current + "-" + project2;
-        File folder = new File(Pathname2);
-        File[] listOfFiles = folder.listFiles();
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].toString().endsWith(".txt")) {
-                //  String newFilename = listOfFiles[i].getName().replaceAll(".{3}$", "java");
-                ProjectFileName2.add(listOfFiles[i].getName().replaceAll(".{3}$", "java"));
-            }
-        }
-
-    }
-     */
     public void Code_clone(String project1, String project2) throws IOException {
-        String Pathname1 = pathGenerate(project1);  //H:\2-1\project\ProcessAllFiles\ProcessFile$H-new
+        String Pathname1 = pathGenerate(project1);  
         String Pathname2 = pathGenerate(project2);
 
         File f1 = new File(Pathname1);
@@ -83,19 +51,17 @@ public class CloneCheck {
             Files.createDirectories(p1);
 
             for (HashMap.Entry<String, String> entry : ProjectReader.projectOne.entrySet()) {
-                new PreProcessing().ProcessFile(entry.getKey(), entry.getValue(), Pathname1); //entry.getKey()-filename with package
+                new PreProcessing().ProcessFile(entry.getKey(), entry.getValue(), Pathname1); 
             }
         }
         getFileListforProject1(project1);
         path1 = Pathname1;
         if (!f2.exists()) {
             ProjectReader.fileRead(Command.currentPath + "//" + project2, 1);
-            //  System.out.println("p2=" + Command.currentPath);
             Path p2 = Paths.get(Pathname2);
             Files.createDirectories(p2);
 
             for (HashMap.Entry<String, String> entry : ProjectReader.projectTwo.entrySet()) {
-                //System.out.println(entry.getKey() + "   " + entry.getValue());
                 new PreProcessing().ProcessFile(entry.getKey(), entry.getValue(), Pathname2);
             }
 
@@ -110,11 +76,8 @@ public class CloneCheck {
         ob.tfIdfVectorProject2();
         CosineSimilarity sim = new CosineSimilarity();
         sim.getCosinesimilarity();
-       // sim.getAverage();
-        // BoxAndWhiskerChart.BoxWhisker();
         new BoxAndWhiskerChart().display();
         CosineSimilarity.similarArray.clear();
-        //  BoxAndWhiskerChart.list.clear();
         ProjectReader.projectOne.clear();
         ProjectReader.projectTwo.clear();
 
